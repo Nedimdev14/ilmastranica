@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 const GLITTER_COUNT = 40;
 const CONFETTI_COUNT = 150;
@@ -120,6 +121,92 @@ const FLEE_SPEED = 6;
 const MIN_SCALE_NE = 0.5;
 const MAX_SCALE_DA = 1.35;
 
+const YES_LABELS = [
+  "DA",
+  "YES",
+  "NARAVNO",
+  "UVIJEK",
+  "SIGURNO",
+  "APSOLUTNO",
+  "TAČNO",
+  "JESTE",
+  "NARAVNO DA",
+  "UVEK",
+  "DA!",
+  "SIGURNO DA",
+  "NARAVNO!",
+  "DA DA",
+  "JASNO",
+  "SLAŽEM SE",
+  "BAŠ TAČNO",
+  "DEFINITIVNO",
+  "NARAVNO DA!",
+  "UVIJEK DA",
+  "SVE DA",
+  "MA NARAVNO",
+  "PA DA",
+  "DA SIGURNO",
+  "JESTE DA",
+  "TAČNO!",
+  "APSOLUTNO DA",
+  "NARAVNO JESTE",
+  "DA NARAVNO",
+  "SIGURNO!",
+  "UVEK DA",
+  "NARAVNO UVEK",
+  "JESTE!",
+  "100% DA",
+  "BAŠ DA",
+  "NARAVNO SIGURNO",
+  "UVIJEK SIGURNO",
+  "DA UVEK",
+  "SIGURNO NARAVNO",
+  "DA JESTE",
+];
+
+const YES_BUTTON_POSITIONS: { left: number; top: number; size: "sm" | "md" | "lg" }[] = [
+  { left: 8, top: 28, size: "lg" },
+  { left: 22, top: 45, size: "md" },
+  { left: 15, top: 62, size: "sm" },
+  { left: 35, top: 32, size: "md" },
+  { left: 48, top: 25, size: "lg" },
+  { left: 62, top: 38, size: "sm" },
+  { left: 75, top: 28, size: "md" },
+  { left: 88, top: 42, size: "lg" },
+  { left: 92, top: 58, size: "sm" },
+  { left: 78, top: 52, size: "md" },
+  { left: 55, top: 48, size: "lg" },
+  { left: 42, top: 55, size: "sm" },
+  { left: 28, top: 72, size: "md" },
+  { left: 12, top: 78, size: "lg" },
+  { left: 38, top: 78, size: "sm" },
+  { left: 52, top: 72, size: "md" },
+  { left: 68, top: 65, size: "lg" },
+  { left: 82, top: 72, size: "sm" },
+  { left: 5, top: 48, size: "md" },
+  { left: 95, top: 68, size: "md" },
+  { left: 18, top: 35, size: "sm" },
+  { left: 72, top: 45, size: "lg" },
+  { left: 45, top: 38, size: "sm" },
+  { left: 58, top: 62, size: "md" },
+  { left: 8, top: 55, size: "md" },
+  { left: 85, top: 35, size: "sm" },
+  { left: 32, top: 62, size: "lg" },
+  { left: 65, top: 52, size: "sm" },
+  { left: 48, top: 68, size: "md" },
+  { left: 22, top: 82, size: "sm" },
+  { left: 78, top: 82, size: "lg" },
+  { left: 55, top: 35, size: "md" },
+  { left: 35, top: 48, size: "lg" },
+  { left: 62, top: 78, size: "sm" },
+  { left: 15, top: 42, size: "md" },
+  { left: 88, top: 78, size: "md" },
+  { left: 42, top: 42, size: "sm" },
+  { left: 72, top: 58, size: "lg" },
+  { left: 28, top: 55, size: "md" },
+  { left: 92, top: 48, size: "sm" },
+];
+
 export default function Home() {
   const [celebration, setCelebration] = useState(false);
   const [nePosition, setNePosition] = useState({ x: 50, y: 55 });
@@ -198,23 +285,33 @@ export default function Home() {
         </>
       )}
 
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 py-12">
+      <div className="relative z-10 flex min-h-screen flex-col items-center px-6 py-8 pt-12">
         {!celebration ? (
           <>
-            <h1 className="mb-12 text-center text-4xl font-black tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:text-5xl md:text-6xl">
+            <h1 className="mb-6 text-center text-4xl font-black tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:text-5xl md:text-6xl">
               Da li Ilma smrdi?
             </h1>
-            <div className="flex min-h-[200px] w-full max-w-xl flex-wrap items-center justify-center gap-6 sm:gap-10">
-              <button
-                onClick={() => setCelebration(true)}
-                className="yes-button rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 px-12 py-6 text-3xl font-bold text-white shadow-xl transition-all duration-300 hover:from-green-600 hover:to-emerald-700 active:scale-95 sm:px-16 sm:py-8 sm:text-4xl"
-                style={{
-                  transform: `scale(${fleeing ? MAX_SCALE_DA : 1})`,
-                  transition: "transform 0.25s ease-out",
+            <div className="relative min-h-[calc(100vh-8rem)] w-full">
+              {YES_BUTTON_POSITIONS.map((pos, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => {
+                  new Audio("/fart.mp3").play().catch(() => {});
+                  setCelebration(true);
                 }}
-              >
-                DA
-              </button>
+                  className="yes-button absolute rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 font-bold text-white shadow-lg transition-all hover:from-green-600 hover:to-emerald-700 active:scale-95"
+                  style={{
+                    left: `${pos.left}%`,
+                    top: `${pos.top}%`,
+                    transform: "translate(-50%, -50%)",
+                    padding: pos.size === "lg" ? "0.75rem 1.5rem" : pos.size === "md" ? "0.5rem 1rem" : "0.35rem 0.75rem",
+                    fontSize: pos.size === "lg" ? "1.125rem" : pos.size === "md" ? "0.9375rem" : "0.8125rem",
+                  }}
+                >
+                  {YES_LABELS[i % YES_LABELS.length]}
+                </button>
+              ))}
               <button
                 ref={neButtonRef}
                 className="no-button absolute rounded-xl border-2 border-gray-400 bg-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-300"
@@ -230,17 +327,15 @@ export default function Home() {
             </div>
           </>
         ) : (
-          <div className="crash-screen absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-            <div className="crash-glitch mb-6 text-8xl font-black text-red-600 sm:text-9xl">
-              404
-            </div>
-            <p className="crash-message mb-4 max-w-md text-xl font-semibold text-red-400 sm:text-2xl">
-              Stranica ne radi više od smrada.
-            </p>
-            <p className="crash-subtext mb-8 text-sm text-gray-500 sm:text-base">
-              Server se srušio. Previše smrada u blizini.
-            </p>
-            <div className="text-4xl">💨☠️</div>
+          <div className="absolute inset-0 flex items-center justify-center bg-black">
+            <Image
+              src="/smrad.png"
+              alt="Smrad"
+              fill
+              className="object-contain"
+              priority
+              sizes="100vw"
+            />
           </div>
         )}
       </div>

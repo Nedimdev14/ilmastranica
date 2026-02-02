@@ -1,0 +1,16 @@
+Image Optimization using the default loader is not compatible with `{ output: 'export' }`.
+  Possible solutions:
+    - Remove `{ output: 'export' }` and run "next start" to run server mode including the Image Optimization API.
+    - Configure `{ images: { unoptimized: true } }` in `next.config.js` to disable the Image Optimization API.
+  Read more: https://nextjs.org/docs/messages/export-image-api
+app/page.tsx (331:13) @ Home
+
+  329 |         ) : (
+  330 |           <div className="absolute inset-0 flex items-center justify-center bg-black">
+> 331 |             <Image
+      |             ^
+  332 |               src="/smrad.png"
+  333 |               alt="Smrad"
+  334 |               fill
+Call Stack
+15
