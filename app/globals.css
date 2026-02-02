@@ -8,8 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +23,226 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Glitter sparkles */
+.glitter-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.glitter {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, #fff 20%, transparent 70%);
+  border-radius: 50%;
+  animation: sparkle 2s ease-in-out infinite;
+  box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.6);
+}
+
+.glitter:nth-child(3n) {
+  background: radial-gradient(circle, #ffd700 30%, transparent 70%);
+  width: 6px;
+  height: 6px;
+}
+
+.glitter:nth-child(5n) {
+  background: radial-gradient(circle, #ff69b4 20%, transparent 70%);
+  box-shadow: 0 0 8px 2px rgba(255, 105, 180, 0.5);
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Fireworks */
+.firework-burst {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
+  animation: firework-burst 1.2s ease-out forwards;
+}
+
+.firework-particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 4px;
+  background: var(--fw-color, #ff6b6b);
+  border-radius: 50%;
+  animation: firework-particle 1.2s ease-out forwards;
+  transform: rotate(var(--angle, 0)) translateY(0);
+  box-shadow: 0 0 6px 2px var(--fw-color, #ff6b6b);
+}
+
+@keyframes firework-burst {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes firework-particle {
+  0% {
+    transform: rotate(var(--angle, 0)) translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(var(--angle, 0)) translateY(-120px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Confetti */
+.confetti-piece {
+  position: fixed;
+  top: -20px;
+  width: 10px;
+  height: 10px;
+  background: var(--confetti-color, #ff6b6b);
+  pointer-events: none;
+  z-index: 5;
+  animation: confetti-fall 3s ease-out forwards;
+  transform: translateX(-50%) rotate(var(--confetti-rotation, 0deg));
+  border-radius: 2px;
+}
+
+.confetti-piece:nth-child(4n) {
+  border-radius: 50%;
+}
+
+.confetti-piece:nth-child(3n) {
+  width: 8px;
+  height: 14px;
+}
+
+@keyframes confetti-fall {
+  0% {
+    top: -20px;
+    opacity: 1;
+  }
+  100% {
+    top: 100vh;
+    opacity: 0.5;
+  }
+}
+
+/* Celebration screen */
+.celebration-screen {
+  animation: celebration-appear 0.6s ease-out;
+}
+
+.celebration-title {
+  background: linear-gradient(135deg, #ec4899, #8b5cf6, #f59e0b);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gradient-shift 2s ease infinite;
+}
+
+.celebration-subtitle {
+  animation: celebration-appear 0.8s ease-out 0.2s both;
+}
+
+.bounce-emoji {
+  display: inline-block;
+  animation: bounce-emoji 0.6s ease-in-out infinite;
+}
+
+@keyframes celebration-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes bounce-emoji {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* Crash / 404 screen */
+.crash-screen {
+  background: #0a0a0a;
+  animation: crash-appear 0.5s ease-out;
+}
+
+.crash-glitch {
+  animation: glitch 2s infinite;
+  text-shadow:
+    2px 0 #ff0000,
+    -2px 0 #00ffff;
+}
+
+.crash-message {
+  animation: crash-appear 0.6s ease-out 0.2s both;
+}
+
+.crash-subtext {
+  animation: crash-appear 0.6s ease-out 0.35s both;
+}
+
+@keyframes crash-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glitch {
+  0%, 90%, 100% {
+    transform: translate(0);
+    text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
+  }
+  92% {
+    transform: translate(-3px, 2px);
+    text-shadow: 3px 0 #ff0000, -3px 0 #00ffff;
+  }
+  94% {
+    transform: translate(3px, -2px);
+    text-shadow: -2px 0 #00ffff, 2px 0 #ff0000;
+  }
+  96% {
+    transform: translate(-2px, 1px);
+    text-shadow: 2px 0 #00ffff, -2px 0 #ff0000;
+  }
+  98% {
+    transform: translate(2px, -1px);
+    text-shadow: -3px 0 #ff0000, 3px 0 #00ffff;
+  }
 }

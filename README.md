@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Da li Ilma smrdi? 💖
 
-## Getting Started
+A fun prank page — deploy it and send Ilma the link!
 
-First, run the development server:
+---
+
+## Deploy and get a link (choose one)
+
+### Option 1: Vercel (easiest, free, ~2 minutes)
+
+1. **Push your project to GitHub**
+   - Create a new repo on [github.com](https://github.com/new) (e.g. `ilmasmrad`).
+   - In your project folder run:
+   ```bash
+   git init
+   git add .
+   git commit -m "Prank page"
+   git branch -M main
+   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+   git push -u origin main
+   ```
+   (Replace `YOUR_USERNAME` and `YOUR_REPO` with your GitHub username and repo name.)
+
+2. **Deploy on Vercel**
+   - Go to [vercel.com](https://vercel.com) and sign in with GitHub.
+   - Click **Add New** → **Project**.
+   - Select your repo and click **Import**.
+   - Click **Deploy** (no settings to change).
+   - When it finishes, you get a link like `https://ilmasmrad.vercel.app`.
+
+3. **Send that link to Ilma.**
+
+---
+
+### Option 2: Netlify Drop (no GitHub, no account for first deploy)
+
+1. **Build the site**
+   ```bash
+   npm install
+   npm run build
+   ```
+   This creates an **`out`** folder.
+
+2. **Upload**
+   - Go to [app.netlify.com/drop](https://app.netlify.com/drop).
+   - Drag and drop the **`out`** folder onto the page.
+   - Netlify will give you a link (e.g. `https://random-name-123.netlify.app`).
+
+3. **Send that link to Ilma.**
+
+---
+
+## Run locally first
+
+To test before deploying:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run build
+npm run preview
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open [http://localhost:3000](http://localhost:3000). You should see “Da li Ilma smrdi?” and the DA / ne buttons. If you see “To get started, edit the page.tsx file”, you’re in the wrong folder or wrong project — make sure you’re in the `ilmasmrad` project and ran the commands above.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Summary
 
-## Learn More
+| Method        | Steps                          | You get                          |
+|---------------|---------------------------------|----------------------------------|
+| **Vercel**    | Push to GitHub → Import → Deploy | Link like `xxx.vercel.app`       |
+| **Netlify**   | Build → Drag `out` to Netlify Drop | Link like `xxx.netlify.app`   |
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Easiest: use **Vercel** with GitHub, then send Ilma the link.

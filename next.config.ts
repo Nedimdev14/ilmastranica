@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "export",
+  trailingSlash: false,
+  // Avoid lockfile warning when building in monorepo or nested folders
+  turbopack: { root: process.cwd() },
 };
 
 export default nextConfig;
