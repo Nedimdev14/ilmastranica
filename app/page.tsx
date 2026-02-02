@@ -1,167 +1,125 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
 
-const GLITTER_COUNT = 40;
-const CONFETTI_COUNT = 150;
-const FIREWORK_PARTICLES = 12;
+const HEART_EMOJIS = ["💕", "💗", "💖", "💘", "❤️", "💓", "🌸"];
 
-function Glitter() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+const FLOW_ROWS = [
+  { top: 12, delay: 0, dir: "ltr" as const },
+  { top: 28, delay: 3, dir: "rtl" as const },
+  { top: 44, delay: 6, dir: "ltr" as const },
+  { top: 60, delay: 2, dir: "rtl" as const },
+  { top: 76, delay: 5, dir: "ltr" as const },
+  { top: 92, delay: 1, dir: "rtl" as const },
+  { top: 20, delay: 4, dir: "rtl" as const },
+  { top: 36, delay: 7, dir: "ltr" as const },
+  { top: 52, delay: 2.5, dir: "rtl" as const },
+  { top: 68, delay: 5.5, dir: "ltr" as const },
+  { top: 84, delay: 1.5, dir: "rtl" as const },
+];
 
-  if (!mounted) {
-    return <div className="glitter-container" aria-hidden />;
-  }
-
+function FlowingHearts() {
   return (
-    <div className="glitter-container" aria-hidden>
-      {Array.from({ length: GLITTER_COUNT }).map((_, i) => (
-        <div
+    <div className="pointer-events-none fixed inset-0 z-[1] overflow-hidden" aria-hidden>
+      {FLOW_ROWS.map((row, i) => (
+        <span
           key={i}
-          className="glitter"
+          className={`heart-flow heart-flow-${row.dir} absolute text-2xl opacity-90 sm:text-3xl md:text-4xl`}
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 3}s`,
-            animationDuration: `${1.5 + Math.random() * 2}s`,
+            top: `${row.top}%`,
+            animationDelay: `${row.delay}s`,
           }}
-        />
+        >
+          {HEART_EMOJIS[i % HEART_EMOJIS.length]}
+        </span>
       ))}
     </div>
   );
 }
 
-function Fireworks({ active }: { active: boolean }) {
-  const [bursts, setBursts] = useState<{ x: number; y: number; id: number; color: string }[]>([]);
-  const idRef = useRef(0);
+const FLOAT_HEART_COUNT = 28;
 
-  useEffect(() => {
-    if (!active) return;
-    const colors = ["#ff6b6b", "#ffd93d", "#6bcb77", "#4d96ff", "#ff85a2", "#a855f7"];
-    const interval = setInterval(() => {
-      setBursts((prev) => [
-        ...prev.slice(-5),
-        {
-          x: 20 + Math.random() * 60,
-          y: 30 + Math.random() * 40,
-          id: idRef.current++,
-          color: colors[Math.floor(Math.random() * colors.length)],
-        },
-      ]);
-    }, 800);
-    return () => clearInterval(interval);
-  }, [active]);
+function FloatingHearts() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
-    <>
-      {bursts.map((b) => (
-        <div
-          key={b.id}
-          className="firework-burst"
+    <div className="pointer-events-none fixed inset-0 z-[1] overflow-hidden" aria-hidden>
+      {Array.from({ length: FLOAT_HEART_COUNT }).map((_, i) => (
+        <span
+          key={i}
+          className="heart-float absolute text-xl opacity-80 sm:text-2xl"
           style={{
-            left: `${b.x}%`,
-            top: `${b.y}%`,
-            ["--fw-color" as string]: b.color,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 4}s`,
+            animationDuration: `${3 + Math.random() * 3}s`,
           }}
         >
-          {Array.from({ length: FIREWORK_PARTICLES }).map((_, i) => (
-            <div
-              key={i}
-              className="firework-particle"
-              style={{
-                ["--angle" as string]: `${(i / FIREWORK_PARTICLES) * 360}deg`,
-              }}
-            />
-          ))}
-        </div>
+          {HEART_EMOJIS[i % HEART_EMOJIS.length]}
+        </span>
       ))}
-    </>
+    </div>
   );
 }
 
-function Confetti({ trigger }: { trigger: boolean }) {
-  const [pieces, setPieces] = useState<{ id: number; x: number; delay: number; color: string; rotation: number }[]>([]);
-
-  useEffect(() => {
-    if (!trigger) return;
-    const colors = ["#ff6b6b", "#ffd93d", "#6bcb77", "#4d96ff", "#ff85a2", "#a855f7", "#f97316", "#ec4899"];
-    setPieces(
-      Array.from({ length: CONFETTI_COUNT }).map((_, i) => ({
-        id: i,
-        x: Math.random() * 100 - 10,
-        delay: Math.random() * 0.5,
-        color: colors[i % colors.length],
-        rotation: Math.random() * 720 - 360,
-      }))
-    );
-  }, [trigger]);
-
+function HeartBgPattern() {
   return (
-    <>
-      {pieces.map((p) => (
-        <div
-          key={p.id}
-          className="confetti-piece"
-          style={{
-            left: `${p.x}%`,
-            animationDelay: `${p.delay}s`,
-            ["--confetti-color" as string]: p.color,
-            ["--confetti-rotation" as string]: `${p.rotation}deg`,
-          }}
-        />
-      ))}
-    </>
+    <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.12]" aria-hidden>
+      <div className="heart-pattern" />
+    </div>
   );
 }
 
 const FLEE_RADIUS = 220;
 const FLEE_SPEED = 6;
 const MIN_SCALE_NE = 0.5;
-const MAX_SCALE_DA = 1.35;
 
 const YES_LABELS = [
   "DA",
-  "YES",
   "NARAVNO",
-  "UVIJEK",
-  "SIGURNO",
-  "APSOLUTNO",
-  "TAČNO",
-  "JESTE",
-  "NARAVNO DA",
-  "UVEK",
+  "NAJLjEPŠA JE",
+  "PRELIJEPA",
+  "DOBRICA",
+  "NAJBOLJA",
+  "LJUBAV",
+  "NAJLjEPŠA!",
+  "SUPER JE",
+  "PREKRASNA",
+  "DOBRA DJEVOJKA",
+  "NAJBOLJA!",
   "DA!",
-  "SIGURNO DA",
-  "NARAVNO!",
-  "DA DA",
-  "JASNO",
+  "NARAVNO DA",
+  "NAJLjEPŠA NA SVIJETU",
+  "VOLIM JE",
+  "PREPRELIJEPA",
   "SLAŽEM SE",
-  "BAŠ TAČNO",
-  "DEFINITIVNO",
-  "NARAVNO DA!",
-  "UVIJEK DA",
-  "SVE DA",
-  "MA NARAVNO",
-  "PA DA",
-  "DA SIGURNO",
-  "JESTE DA",
   "TAČNO!",
-  "APSOLUTNO DA",
-  "NARAVNO JESTE",
-  "DA NARAVNO",
-  "SIGURNO!",
-  "UVEK DA",
-  "NARAVNO UVEK",
-  "JESTE!",
-  "100% DA",
-  "BAŠ DA",
-  "NARAVNO SIGURNO",
-  "UVIJEK SIGURNO",
-  "DA UVEK",
-  "SIGURNO NARAVNO",
-  "DA JESTE",
+  "JESTE NAJLjEPŠA",
+  "I NAJBOLJA",
+  "DOBRA JE",
+  "LJUBAV!",
+  "NAJBOLJA DJEVOJKA",
+  "NARAVNO!",
+  "100%",
+  "UVJEK DA",
+  "NAJLjEPŠA I NAJBOLJA",
+  "DOBRICA SI",
+  "PREKRASNA JE",
+  "VOLIM",
+  "NAJBOLJA NA SVIJETU",
+  "DA DA",
+  "NAJLjEPŠA",
+  "I DOBRA",
+  "SVE NAJBOLJE",
+  "NAJBOLJA!",
+  "LJUBAV NAJBOLJA",
+  "PRELIJEPA I DOBRA",
+  "DA VOLIM",
 ];
 
 const YES_BUTTON_POSITIONS: { left: number; top: number; size: "sm" | "md" | "lg" }[] = [
@@ -265,42 +223,32 @@ export default function Home() {
   return (
     <div
       ref={containerRef}
-      className="relative min-h-screen w-full overflow-hidden bg-gray-900"
-      style={
-        !celebration
-          ? {
-              backgroundImage: "url('/ilma.png')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }
-          : undefined
-      }
+      className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-pink-100 via-rose-50 to-pink-200"
     >
+      <HeartBgPattern />
       {!celebration && (
         <>
-          <div className="absolute inset-0 bg-black/40" aria-hidden />
-          <Glitter />
-          <Fireworks active={true} />
+          <FlowingHearts />
+          <FloatingHearts />
         </>
       )}
 
       <div className="relative z-10 flex min-h-screen flex-col items-center px-6 py-8 pt-12">
         {!celebration ? (
           <>
-            <h1 className="mb-6 text-center text-4xl font-black tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:text-5xl md:text-6xl">
-              Da li Ilma smrdi?
+            <h1 className="mb-2 text-center text-4xl font-black tracking-tight text-rose-800 drop-shadow-sm sm:text-5xl md:text-6xl">
+              Da li je Ilma najljepša na svijetu?
             </h1>
-            <div className="relative min-h-[calc(100vh-8rem)] w-full">
+            <p className="mb-6 text-center text-lg font-medium text-rose-600 sm:text-xl">
+              Lijepo je što je dobra djevojka 💕
+            </p>
+            <div className="relative min-h-[calc(100vh-10rem)] w-full">
               {YES_BUTTON_POSITIONS.map((pos, i) => (
                 <button
                   key={i}
                   type="button"
-                  onClick={() => {
-                  new Audio("/fart.mp3").play().catch(() => {});
-                  setCelebration(true);
-                }}
-                  className="yes-button absolute rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 font-bold text-white shadow-lg transition-all hover:from-green-600 hover:to-emerald-700 active:scale-95"
+                  onClick={() => setCelebration(true)}
+                  className="yes-button absolute rounded-2xl bg-gradient-to-r from-rose-400 to-pink-500 font-bold text-white shadow-lg transition-all hover:from-rose-500 hover:to-pink-600 active:scale-95"
                   style={{
                     left: `${pos.left}%`,
                     top: `${pos.top}%`,
@@ -314,7 +262,7 @@ export default function Home() {
               ))}
               <button
                 ref={neButtonRef}
-                className="no-button absolute rounded-xl border-2 border-gray-400 bg-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-300"
+                className="no-button absolute rounded-xl border-2 border-rose-300 bg-white/80 px-4 py-2 text-sm font-medium text-rose-600 transition-all duration-200 hover:bg-rose-100"
                 style={{
                   left: `${nePosition.x}%`,
                   top: `${nePosition.y}%`,
@@ -327,15 +275,25 @@ export default function Home() {
             </div>
           </>
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-black">
-            <Image
-              src="/smrad.png"
-              alt="Smrad"
-              fill
-              className="object-contain"
-              priority
-              sizes="100vw"
-            />
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-rose-50 to-pink-200 px-6">
+            <HeartBgPattern />
+            <FlowingHearts />
+            <FloatingHearts />
+            <div className="relative z-10 text-center">
+              <p className="cute-title mb-4 text-4xl font-black text-rose-700 sm:text-5xl md:text-6xl">
+                Najljepša si na svijetu! 💖
+              </p>
+              <p className="cute-subtitle mb-8 text-2xl font-semibold text-rose-600 sm:text-3xl">
+                I najbolja djevojka! 💕
+              </p>
+              <div className="flex justify-center gap-3 text-4xl sm:gap-4 sm:text-5xl">
+                <span className="heart-bounce" style={{ animationDelay: "0s" }}>💗</span>
+                <span className="heart-bounce" style={{ animationDelay: "0.1s" }}>💖</span>
+                <span className="heart-bounce" style={{ animationDelay: "0.2s" }}>💕</span>
+                <span className="heart-bounce" style={{ animationDelay: "0.3s" }}>💘</span>
+                <span className="heart-bounce" style={{ animationDelay: "0.4s" }}>❤️</span>
+              </div>
+            </div>
           </div>
         )}
       </div>
